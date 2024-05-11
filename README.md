@@ -14,7 +14,11 @@ To run this game, you need to have Python installed on your system. The code has
 
 1. Clone or download this repository to your local machine.  
 2. Navigate to the directory containing the files.  
-3. Run the connect4.py file using Python. In the terminal type “python p4graph.py”  
+3. Run the connect4.py file using Python. In the terminal type “python p4graph.py”
+  
+   ```bash  
+   python p4graph.py  
+    ``` 
 4. The graphical interface of the Connect 4 game will open.  
 5. Player 1 and Player 2 take turns dropping colored discs into the grid.  
 6. The first player to connect four of their discs vertically, horizontally, or diagonally wins the game.  
@@ -27,4 +31,4 @@ When the game ends (either by a win or draw), a message box will prompt you to r
 
 ### Enjoy the game ! 
 
-Have fun playing Connect 4 with your friends.
+Have fun playing Connect 4 with your friends.  
