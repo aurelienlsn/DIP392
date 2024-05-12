@@ -1,22 +1,33 @@
 import tkinter as tk
 from tkinter import messagebox
+
 class Color:
     def __init__(self, red, green, blue):
+        if not (0 <= red <= 255) or not (0 <= green <= 255) or not (0 <= blue <= 255):
+            raise ValueError("RGB values must be between 0 and 255")
         self.red = red
         self.green = green
         self.blue = blue
 
 class Disc:
     def __init__(self, color):
+        if color is None:
+            raise TypeError("Disc color cannot be None")
         self.discColor = color
 
 class Player:
     def __init__(self, name, color):
+        if not isinstance(name, str):
+            raise TypeError("Player name must be a string")
+        if color is None:
+            raise TypeError("Player color cannot be None")
         self.playerName = name
         self.playerColor = color
 
 class Grid:
     def __init__(self, rows, columns):
+        if rows <= 0 or columns <= 0:
+            raise ValueError("Grid size must be positive")
         self.gridSize = (rows, columns)
         self.gridLayout = [[None for _ in range(columns)] for _ in range(rows)]
 
@@ -182,9 +193,16 @@ class Connect4GUI:
             for j in range(7):
                 self.buttons[i][j].config(bg="white")
 
-# Start the GUI
-root = tk.Tk()
-game = Connect4Game()
-game.startNewGame('Player 1', 'Player 2')
-app = Connect4GUI(root, game)
-root.mainloop()
+try:
+    # Start the GUI
+    root = tk.Tk()
+    game = Connect4Game()
+    game.startNewGame('Player 1', 'Player 2')
+    app = Connect4GUI(root, game)
+    root.mainloop()
+except ValueError as ve:
+    print("ValueError:", ve)
+except TypeError as te:
+    print("TypeError:", te)
+except Exception as e:
+    print("An error occurred:", e)
