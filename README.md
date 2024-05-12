@@ -14,7 +14,7 @@ To run this game, you need to have Python installed on your system. The code has
 
 1. Clone or download this repository to your local machine.  
 2. Navigate to the directory containing the files.  
-3. Run the connect4.py file using Python. In the terminal type “python p4graph.py”
+3. Run the p4.py file using Python. In the terminal type “python p4graph.py”
   
    ```bash  
    python p4graph.py  
