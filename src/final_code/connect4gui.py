@@ -10,53 +10,74 @@ class Connect4GUI:
         self.create_widgets()
 
     def create_widgets(self):
-        self.buttons = []
-        for i in range(6):
-            row = []
-            for j in range(7):
-                button = tk.Button(self.root, text="", width=4, height=2, command=lambda col=j: self.make_move(col))
-                button.grid(row=i, column=j)
-                row.append(button)
-            self.buttons.append(row)
+        self.canvas = tk.Canvas(self.root, width=700, height=600, bg='blue')
+        self.canvas.grid(row=0, column=0, rowspan=6, columnspan=7)
 
-        self.status_label = tk.Label(self.root, text="", font=("Helvetica", 16))
+        self.canvas.bind("<Button-1>", self.click_handler)
+
+        self.status_label = tk.Label(self.root, text="Player 1's turn (Red)", font=("Helvetica", 16))
         self.status_label.grid(row=6, columnspan=7)
+
+        self.reset_button = tk.Button(self.root, text="Reset Game", command=self.reset_game, font=("Helvetica", 14))
+        self.reset_button.grid(row=7, columnspan=7, pady=10)
+
+        self.draw_board()
+
+    def draw_board(self):
+        self.discs = [[None for _ in range(7)] for _ in range(6)]
+        for row in range(6):
+            for col in range(7):
+                x1 = col * 100 + 10
+                y1 = row * 100 + 10
+                x2 = x1 + 80
+                y2 = y1 + 80
+                self.discs[row][col] = self.canvas.create_oval(x1, y1, x2, y2, fill="white", outline="blue")
+
+    def click_handler(self, event):
+        col = event.x // 100
+        self.make_move(col)
 
     def make_move(self, column):
         if self.game.currentPlayer is not None:
             if self.game.playTurn(column):
                 self.update_board()
+                self.update_status()
 
     def update_board(self):
         for i in range(6):
             for j in range(7):
                 disc = self.game.grid.gridLayout[i][j]
                 if disc is None:
-                    self.buttons[i][j].config(bg="white")
+                    self.canvas.itemconfig(self.discs[i][j], fill="white")
                 else:
                     color = disc.discColor
                     if color == "red":
-                        self.buttons[i][j].config(bg="red")
+                        self.canvas.itemconfig(self.discs[i][j], fill="red")
                     elif color == "yellow":
-                        self.buttons[i][j].config(bg="yellow")
+                        self.canvas.itemconfig(self.discs[i][j], fill="yellow")
 
         if self.game.gameStatus == 'won':
             self.status_label.config(text=f"{self.game.winner.playerName} wins!")
-            self.prompt_restart()
         elif self.game.gameStatus == 'draw':
             self.status_label.config(text="It's a draw!")
-            self.prompt_restart()
 
-    def prompt_restart(self):
-        choice = messagebox.askyesno("Game Over", "Do you want to play again?")
-        if choice:
-            self.game.restartGame()
-            self.status_label.config(text="")
-            self.reset_board()
-        else:
-            self.root.quit()
+    def update_status(self):
+        if self.game.gameStatus == 'playing':
+            current_player = "Player 1 (Red)" if self.game.currentPlayer.discColor == "red" else "Player 2 (Yellow)"
+            self.status_label.config(text=f"{current_player}'s turn")
+
+    def reset_game(self):
+        self.game.restartGame()
+        self.status_label.config(text="Player 1's turn (Red)")
+        self.reset_board()
 
     def reset_board(self):
         for i in range(6):
             for j in range(7):
-                self.buttons[i][j].config(bg="white")
+                self.canvas.itemconfig(self.discs[i][j], fill="white")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    game = Connect4Game()
+    gui = Connect4GUI(root, game)
+    root.mainloop()
